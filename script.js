@@ -93,6 +93,7 @@ function animate() {
 }
 
 function connect() {
+  let opacityValue = 1;
   for (let i = 0; i < particleArray.length; ++i) {
     for (let j = i; j < particleArray.length; ++j) {
       let distance =
@@ -101,7 +102,8 @@ function connect() {
         (particleArray[i].y - particleArray[j].y) *
           (particleArray[i].y - particleArray[j].y);
       if (distance < (canvas.width / 7) * (canvas.height / 7)) {
-        ctx.strokeStyle = "rgba(255,255,255, 0.3)";
+        opacityValue = 1 - distance / 20000;
+        ctx.strokeStyle = "rgba(255,255,255, " + opacityValue + ")";
         ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.moveTo(particleArray[i].x, particleArray[i].y);
@@ -111,6 +113,18 @@ function connect() {
     }
   }
 }
+
+window.addEventListener("resize", () => {
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
+  mouse.radius = (canvas.height / 80) * (canvas.height / 80);
+  init();
+});
+
+window.addEventListener("mouseout", () => {
+  mouse.x = undefined;
+  mouse.y = undefined;
+});
 
 init();
 animate();
